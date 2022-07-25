@@ -1,0 +1,112 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">BlazorApp</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <a class="nav-link" href="/HelloWorld">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Hello World
+            </a>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="about">
+                <span class="oi oi-link-intact" aria-hidden="true"></span> About
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/Samples/DialogDemo">
+                <span class="oi oi-link-intact" aria-hidden="true"></span> DialogDemo
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="TodoListInMemory">
+                <span class="oi oi-pencil" aria-hidden="true"></span> TODO List
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="bonus">
+                <span class="oi oi-pie-chart" aria-hidden="true"></span> 용돈 나누기
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="BlazorForm">
+                <span class="oi oi-task" aria-hidden="true"></span> 폼 및 유효성검사
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/Demos/ParentChild/FrmParent">
+                <span class="oi oi-loop-square" aria-hidden="true"></span> ParentChild
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/SearchBoxTest">
+                <span class="oi oi-loop-square" aria-hidden="true"></span> SearchBox
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="DulPagerTest">
+                <span class="oi oi-ellipses" aria-hidden="true"></span> 페이저 테스트
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="SubComponentTest">
+                <span class="oi oi-layers" aria-hidden="true"></span> 서브 컴포넌트
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="MatBlazorTest">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> MatBlazorTest
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="MatTableTest">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> MatTableTest
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="ChartJsDemo">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> ChartJS
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="FrmFileUploadTest">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> File Upload
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="SignaturePadDemo">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> SignaturePadDemo
+            </NavLink>
+        </li>        
+    </ul>
+</div>
+
+@code {
+    bool collapseNavMenu = true;
+
+    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

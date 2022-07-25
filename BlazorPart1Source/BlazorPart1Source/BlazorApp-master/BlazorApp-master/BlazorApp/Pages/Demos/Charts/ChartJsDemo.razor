@@ -1,0 +1,107 @@
+﻿@page "/ChartJsDemo"
+
+@using ChartJs.Blazor.Charts
+@using ChartJs.Blazor.ChartJS.PieChart
+@using ChartJs.Blazor.ChartJS.Common.Properties
+@using ChartJs.Blazor.Util
+
+<h3>ChartJsDemo</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <ChartJsPieChart @ref="_pieChartJs" Config="@_config" Width="600" Height="300" />
+    </div>
+    <div class="col-md-6">
+        <SimpleBarChartComponent></SimpleBarChartComponent>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <StackedBarChartComponent></StackedBarChartComponent>
+    </div>
+    <div class="col-md-6">
+        <TimeBarChartComponent></TimeBarChartComponent>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <LinearLineChartComponent></LinearLineChartComponent>
+    </div>
+    <div class="col-md-6">
+        <DoughnutChartComponent></DoughnutChartComponent>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <BubbleChartComponent></BubbleChartComponent>
+    </div>
+    <div class="col-md-6">
+        <DoughnutChartComponent></DoughnutChartComponent>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <PieChartComponent></PieChartComponent>
+    </div>
+    <div class="col-md-6">
+        <PolarAreaChartComponent></PolarAreaChartComponent>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <RadarChartComponent></RadarChartComponent>
+    </div>
+    <div class="col-md-6">
+        <ScatterChartComponent></ScatterChartComponent>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</div>
+
+
+@code {
+    private PieConfig _config;
+    private ChartJsPieChart _pieChartJs;
+
+    protected override void OnInitialized()
+    {
+        _config = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Sample chart from Blazor"
+                },
+                Responsive = true,
+                Animation = new ArcAnimation
+                {
+                    AnimateRotate = true,
+                    AnimateScale = true
+                }
+            }
+        };
+
+        _config.Data.Labels.AddRange(new[] { "A", "B", "C", "D", "안녕" });
+
+        var pieSet = new PieDataset
+        {
+            BackgroundColor = new[] { ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString() },
+            BorderWidth = 0,
+            HoverBackgroundColor = ColorUtil.RandomColorString(),
+            HoverBorderColor = ColorUtil.RandomColorString(),
+            HoverBorderWidth = 1,
+            BorderColor = "#ffffff",
+        };
+
+        pieSet.Data.AddRange(new double[] { 4, 5, 6, 7, 8 });
+        _config.Data.Datasets.Add(pieSet);
+    }
+}

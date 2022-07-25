@@ -1,0 +1,38 @@
+﻿@page "/BlazorForm"
+
+@using BlazorApp.Models
+
+<h3>BlazorForm</h3>
+
+<EditForm Model="@exampleModel" OnValidSubmit="@btnSubmit_Click">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+    <InputText id="txtName" @bind-Value="exampleModel.Name"></InputText>
+    <ValidationMessage For="@(() => exampleModel.Name)"></ValidationMessage>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+<input type="text" @bind="@test" @bind:event="oninput"/>
+<input type="text" @bind-value="@test1" @bind-value:event="oninput" />
+<hr />
+@exampleModel.Name
+<hr />
+@test
+<hr />
+@test1
+
+@code { private ExampleModel exampleModel = new ExampleModel();
+    string test = "가나다";
+    string test1 = "가나다1";
+
+    protected override void OnInitialized()
+    {
+        //exampleModel.Name = "홍길동";
+    }
+
+    private void btnSubmit_Click()
+    {
+
+    } }

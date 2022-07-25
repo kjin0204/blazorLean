@@ -1,0 +1,162 @@
+﻿@using Dul.Web
+
+<input type="button" name="name" value="2번" @onclick="@(() => PagerButtonClicked(2))" />
+<input type="button" name="name" value="3번" @onclick="@(() => PagerButtonClicked(3))" />
+
+<ul class="pagination pagination-sm">
+    @*처음 링크*@
+    @if (Model.PageNumber == 1)
+    {
+        <li class="page-item">
+            <a class="page-link first disabled">처음</a>
+        </li>
+    }
+    else
+    {
+        // 검색 모드이면 추가적으로 SearchField와 SearchQuery를 전송함
+        if (Model.SearchMode)
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/1&SearchField=@Model.SearchField&SearchQuery=@Model.SearchQuery" class="page-link first">처음</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/1" class="page-link first">처음</a>
+            </li>
+        }
+    }
+
+    @*이전 링크*@
+    @if (Model.PageNumber > Model.PagerButtonCount)
+    {
+        // 검색 모드이면 추가적으로 SearchField와 SearchQuery를 전송함
+        if (Model.SearchMode)
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/@(((Model.PageNumber - 1) / (int)Model.PagerButtonCount) * Model.PagerButtonCount)&SearchField=@Model.SearchField&SearchQuery=@Model.SearchQuery" class="page-link prev">이전</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/@(((Model.PageNumber - 1) / (int)Model.PagerButtonCount) * Model.PagerButtonCount)" class="page-link prev">이전</a>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="page-item">
+            <a class="page-link prev">이전</a>
+        </li>
+    }
+
+    @{
+        int i = 0;
+    }
+
+    @*페이지 수만큼 숫자 버튼 출력*@
+    @for (i = (((Model.PageNumber - 1) / (int)Model.PagerButtonCount) * Model.PagerButtonCount + 1); i <= ((((Model.PageNumber - 1) / (int)Model.PagerButtonCount) + 1) * Model.PagerButtonCount); i++)
+    {
+        if (i > Model.PageCount)
+        {
+            break; // 페이지 수보다 크면 종료
+        }
+
+        // 현재 보고 있는 페이지면 링크 제거
+        if (i == Model.PageNumber)
+        {
+            <li class="page-item active">
+                <a href="#" class="page-link">
+                    @i
+                </a>
+            </li>
+        }
+        else
+        {
+            if (Model.SearchMode)
+            {
+                <li class="page-item">
+                    <a href="@Model.Url/Page/@i&SearchField=@Model.SearchField&SearchQuery=@Model.SearchQuery" class="page-link" @onclick="@(() => PagerButtonClicked(i))">
+                        @i
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a href="@Model.Url/Page/@i" class="page-link" @onclick="@(() => PagerButtonClicked(i))">
+                        @i
+                    </a>
+                </li>
+            }
+        }
+    }
+
+    @*다음 링크*@
+    @if (i <= Model.PageCount)
+    {
+        // 검색 모드이면 추가적으로 SearchField와 SearchQuery를 전송함
+        if (Model.SearchMode)
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/@(((Model.PageNumber - 1) / (int)Model.PagerButtonCount) * Model.PagerButtonCount + (Model.PagerButtonCount + 1))&SearchField=@Model.SearchField&SearchQuery=@Model.SearchQuery" class="page-link next">다음</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/@(((Model.PageNumber - 1) / (int)Model.PagerButtonCount) * Model.PagerButtonCount + (Model.PagerButtonCount + 1))" class="page-link next">다음</a>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="page-item">
+            <a class="page-link next">다음</a>
+        </li>
+    }
+
+    @*마지막 링크*@
+    @if (Model.PageNumber != Model.PageCount)
+    {
+        if (Model.SearchMode)
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/@Model.PageCount&SearchField=@Model.SearchField&SearchQuery=@Model.SearchQuery" class="page-link first">마지막</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a href="@Model.Url/Page/@Model.PageCount" class="page-link first">마지막</a>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="page-item">
+            <a class="page-link last disabled">마지막</a>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter]
+    public PagerBase Model { get; set; }
+
+    protected override Task OnParametersSetAsync()
+    {
+        Model.PageCount = Convert.ToInt32(System.Math.Ceiling(Model.RecordCount / (double)Model.PageSize));
+        return base.OnParametersSetAsync();
+    }
+
+    [Parameter]
+    public Action<int> PageChanged { get; set; }
+
+    protected void PagerButtonClicked(int page)
+    {
+        PageChanged?.Invoke(page);
+    }
+}

@@ -1,0 +1,21 @@
+﻿@page "/SubComponentTest"
+
+@using BlazorApp.Pages.SubComponent
+
+<h3>SubComponentTest</h3>
+
+페이지: @_page
+<SubComponent PageChanged="@PagerPageChanged"></SubComponent>
+
+@code {
+
+    public string Page { get; set; } = "1";
+
+    private string _page = "0";
+
+    protected void PagerPageChanged(int page)
+    {
+        _page = page.ToString();
+    }
+
+}

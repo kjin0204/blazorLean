@@ -1,0 +1,22 @@
+﻿<h3>SubComponent</h3>
+
+<input type="button" name="name" value="2번" @onclick="@(() => PagerButtonClicked(2))" />
+<input type="button" name="name" value="3번" @onclick="@(() => PagerButtonClicked(3))" />
+
+<b>
+    안녕: 
+    @_page
+</b>
+
+@code {
+    [Parameter]
+    public Action<int> PageChanged { get; set; }
+
+    private string _page = "sdfsdf";
+
+    protected void PagerButtonClicked(int page)
+    {
+        _page = page.ToString();
+        PageChanged?.Invoke(page);
+    }
+}

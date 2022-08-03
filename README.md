@@ -210,3 +210,96 @@
         <script src="_content/MatBlazor/dist/matBlazor.js"></script>
     4) table을 사용하려면 Startup.cs 에 추가
         services.AddScoped<HttpClient>(); // MatBlazor
+
+6. chartJs.Blazor 컴포넌트를 사용하여 여러 종류의 차트를 빠르게 그리기
+    1) Nuget패키지에서 ChartJs 설치
+    2) Assets있는 javascript를 _Host.cshtml에 추가하기
+    3) _Impotys.razor에  @using ChartJs.Blazor; 추가
+    4) 하단에 있는 
+            ChartJs.Blazor.Common
+            ChartJs.Blazor.Common.Axes
+            ChartJs.Blazor.Common.Axes.Ticks
+            ChartJs.Blazor.Common.Enums
+            ChartJs.Blazor.Common.Handlers
+            ChartJs.Blazor.Common.Time
+            ChartJs.Blazor.Util
+            ChartJs.Blazor.Interop
+        애들은 각 페이지에 추가 해서 사용
+    5) 컴포넌트 폴더에 차트 컴포넌트 추가되어 있음.
+        - 옮겨온 컴포넌트 폴더에 있는 차트를 _Imports.razor에 추가함
+    
+7. FrmFileUploadTest_Blazor에서 단일 파일 업로드 하기
+    1) UI화면  FrmFileUploadTest.razor 
+    2) nuget에서 BlazorInputFile 설치 하면되는데 강의 에서는 프리뷰 버전이라 구글에서 blazorinputfile 깃허브로 들어가
+       소스 다운받아 프로젝트에 첨부하여 사용. NuGets 폴더에 추가 했음.
+    3) _import.razor에서  using blazorinputfile 추가함.
+    4) IFileUploadService 인터페이스, 상속받은 FileUploadService 클래스 생성
+    5) 인터페이스에 
+        Task UploadAsync(IFileListEntry file); 정의 함
+    6) 상속 클래스 
+        using Microsoft.AspNetCore.Hosting;
+        using Microsoft.AspNetCore.Hosting;
+        using System.IO;
+        using System.Threading.Tasks;
+        private readonly IWebHostEnvironment _environment;
+
+        //wwwroot 경로를 찾아가기위해 생성자 추가
+        public FileUploadService(IWebHostEnvironment env)
+        {
+            this._environment = env;
+        }
+
+         public async Task UploadAsync(IFileListEntry fileEntry)
+        {
+            //_environment.WebRootPath  (wwwroot(word wireld web 루트 경로), 폴더, 파일명
+            var path = Path.Combine(_environment.WebRootPath, "Upload", fileEntry.Name);
+            var ms = new MemoryStream(); //메모리 스트림 생성
+            await fileEntry.Data.CopyToAsync(ms); // 메모리 스트림에 업로드해온 파일리스트를 복사
+            //파일 쓰기(경로, 파일모드(생성),파일 엑세스는 쓰기)
+            using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                ms.WriteTo(file); 
+            }
+        }
+    7) startUp에서 주입
+            services.AddScoped<IFileUploadService, FileUploadService>();
+    8) 코드 비아인드로 cs 파일 생성 partial 클래스(FrmFileUploadTest.razor.cs)
+
+        public partial class FrmFileUploadTest
+        {
+
+            using Microsoft.AspNetCore.Components; // Inject 사용하기 위함
+            //startup에서 주입받아서 사용
+            [Inject] 
+            public IFileUploadService FileUploadServiceReference { get; set; }
+
+            private IFileListEntry[] selectedFiles; 
+            protected void HandleSelection(IFileListEntry[] files)
+            {
+                this.selectedFiles = files;
+            }
+
+            protected async void UploadClick()
+            {
+                var file = selectedFiles.FirstOrDefault();
+                if (file != null)
+                {
+                    await FileUploadServiceReference.UploadAsync(file);
+                }
+            }
+        }
+    9) UI FrmFileUploadTest.razor
+        @page "/FrmFileUploadTest"
+
+        <h3>단일 파일 업로드 코드 조각</h3>
+
+        <BlazorInputFile.InputFile OnChange="HandleSelection">  //선택한 파일들을 받아옴
+        </BlazorInputFile.InputFile>
+
+        <input type="button" name="Save" value="업로드"
+            @onclick="UploadClick" />
+    10) wwwrot에 Upload 폴더 생성. Network Service 쓰기 권한이있어야함
+        폴더 -> 속성 -> 보안탭 ->편집 버튼 -> NETWORK SERVICE가 없으면 추가 버튼 -> NETWORK SERVICE 입력 후 확인 
+        -> NETWORK SERVICE에 쓰기권한 추가
+    11) _Host.cshtml 에 자바스크립트 추가
+        <script src="_content/BlazorInputFile/inputfile.js"></script>

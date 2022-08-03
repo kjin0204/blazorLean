@@ -29,6 +29,7 @@
     <Folder Include="Pages\Demos\ParentChild\" />
     <Folder Include="Pages\Samples\" />
     <Folder Include="wwwroot\Upload\" />
+    <Folder Include="wwwroot\Upload\" />
   </ItemGroup>
 
 </Project>

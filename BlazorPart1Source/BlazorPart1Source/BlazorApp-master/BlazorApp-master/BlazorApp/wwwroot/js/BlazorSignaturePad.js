@@ -533,10 +533,11 @@
 
 })));
 
-
+//  id : 도큐먼트 아이디
 window.BlazorSignaturePad = function (id) {
-    var canvas = document.getElementById(id);
+    var canvas = document.getElementById(id); //캔버스 아이디를 받아서 캔버스를 받음
 
+    //시그니처 패드를 하나 생성함
     var signaturePad = new SignaturePad(canvas, {
         // It's Necessary to use an opaque color when saving image as JPEG;
         // this option can be omitted if only saving as PNG or SVG

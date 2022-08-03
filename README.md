@@ -303,3 +303,82 @@
         -> NETWORK SERVICE에 쓰기권한 추가
     11) _Host.cshtml 에 자바스크립트 추가
         <script src="_content/BlazorInputFile/inputfile.js"></script>
+
+12. javaScript interop을 사용하여 닷넷에서 자바스크립트를 자바 스크립트에서 닷넷 메서드를 호출하기(서명하는 기능 추가)
+    1) Samples폴더에 SignaturePadDemo.razor 생성
+    2) google에서 signanaturPad 검색해서 깃 경로로 들어가 소스 파일 받아옴.(javaScript)
+        -압축 풀고 docs 폴더에서 js, css , index.html을 wwwroot에 복사 붙여넣기
+        - signature_pad.umd.js 파일 명을 -> BlazorSignaturePad.js명으로 변경
+        - _Host.cshtml 에 자바스크립트 추가 <script src="~/js/BlazorSignaturePad.js"></script>
+    3) BlazorSignaturePad.js 마지막 줄에 해당 줄 추가(javaScript에서 blazor ui 제어)
+        //  id : 도큐먼트 아이디
+        window.BlazorSignaturePad = function (id) {
+            var canvas = document.getElementById(id); //캔버스 아이디를 받아서 캔버스를 받음
+
+            //시그니처 패드를 하나 생성함
+            var signaturePad = new SignaturePad(canvas, {
+                // It's Necessary to use an opaque color when saving image as JPEG;
+                // this option can be omitted if only saving as PNG or SVG
+                backgroundColor: 'rgb(255, 255, 255)'
+            });
+        };
+
+        <!--그리는거 끝났을때 발생하는 이벤트-->
+        SignaturePad.prototype._strokeEnd = function (event) {
+          this._strokeUpdate(event);
+          if (typeof this.onEnd === 'function') {
+              this.onEnd(event);
+          }
+
+          // 블레이저에 값을 받기위해 추가================================================
+          document.getElementById("txtSignature").value = this.toDataURL(); // 블레이저에 생성한 id = "txtSignature" 에 이미지 string값 저장
+          DotNet.invokeMethodAsync("BlazorApp", "GetImageDataAsync", this.toDataURL()); //매개변수 1: 어셈블리이름(프로젝트이름),2: 메소드 이름,3: 닷넬 메소드에 매겨변수가 있을경우 매개변수값
+          //============================================================================
+      };
+    4) SignaturePadDemo.razor 파일에서
+        @page "/SignaturePadDemo"
+        @inject IJSRuntime JSRuntime
+        <h3>SinaturePadDemo</h3>
+        <canvas width="300" height="200" id="theCanvas" style="border: 1px solid red;">
+        </canvas>
+        <hr />
+        <input type="text" @bind="ImageData" id="txtSignature" /> <!--이미지를 string으로 저장-->  <!---->
+        <hr />
+        @ImageData
+        <hr />
+        <img src="@ImageDataSrc" />
+        <hr />
+        <input type="button" value="가져오기" @onclick="GetData" />
+        <input type="button" value="지우기" @onclick="CleanData" />
+        @code {
+            private string ImageData = "test"; //이미지를 string으로 저장
+            protected override async Task OnAfterRenderAsync(bool firstRender)
+            {
+                if (firstRender) //처음 랜더할때만 firstRender값이 true가 됨
+                {
+                    await JSRuntime.InvokeAsync<object>("alert", "렌더 완료");
+                    //BlazorSignaturePad.js 에서 생성한 함수 실행 1: 함수명, 2: 매개변수 canvas 아이디
+                    //캔버스를 시그니처 패드로 만들어줌
+                    await JSRuntime.InvokeAsync<object>("BlazorSignaturePad", "theCanvas"); 
+                }
+            }
+            public async Task CleanData()
+            {
+                await JSRuntime.InvokeAsync<object>("BlazorSignaturePad", "theCanvas");
+            }
+            private string ImageDataSrc = "";
+            public void GetData()
+            {
+                ImageDataSrc = SignaturePadDemo.GetImageSrc();
+            }
+            public static string GetImageSrc()
+            {
+                return ImageDataFromJavaScript;
+            }
+            private static string ImageDataFromJavaScript = "";
+            [JSInvokable] //자바 스크립트에서 .net 메소드를 호출하게 해주는 어노테이션
+            public static void GetImageDataAsync(string imageData)
+            {
+                ImageDataFromJavaScript = imageData;
+            }
+        }

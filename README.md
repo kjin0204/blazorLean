@@ -238,7 +238,6 @@
         Task UploadAsync(IFileListEntry file); 정의 함
     6) 상속 클래스 
         using Microsoft.AspNetCore.Hosting;
-        using Microsoft.AspNetCore.Hosting;
         using System.IO;
         using System.Threading.Tasks;
         private readonly IWebHostEnvironment _environment;
@@ -263,7 +262,7 @@
         }
     7) startUp에서 주입
             services.AddScoped<IFileUploadService, FileUploadService>();
-    8) 코드 비아인드로 cs 파일 생성 partial 클래스(FrmFileUploadTest.razor.cs)
+    8) 코드 비하인드로 cs 파일 생성 partial 클래스(FrmFileUploadTest.razor.cs)
 
         public partial class FrmFileUploadTest
         {

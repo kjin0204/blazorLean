@@ -13,10 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication3.Areas.Identity;
-using WebApplication3.Data;
+using WebAdimin.Areas.Identity;
+using WebAdimin.Data;
+using WebAdimin.Services.FileUpload;
 
-namespace WebApplication3
+namespace WebAdimin
 {
     public class Startup
     {
@@ -41,6 +42,8 @@ namespace WebApplication3
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSingleton<WeatherForecastService>();
+
+            services.AddScoped<IFileUploadService, FileUploadService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

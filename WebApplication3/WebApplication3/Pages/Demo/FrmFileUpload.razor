@@ -1,0 +1,10 @@
+﻿@page "/Demo/FrmFileUpload"
+@*multiple='multiple'*@
+
+@*<InputFile multiple="true" @onchange="HandleSelection"></InputFile>*@
+<AgnoInputFile multiple="true" OnFileChange="HandleSelection"></AgnoInputFile>
+
+<button type="button" @onclick="UploadClick">업로드</button>
+
+
+<button type="button" @onclick="test">test</button>

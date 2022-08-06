@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "WebApplication3": {
+    "WebAdimin": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,
